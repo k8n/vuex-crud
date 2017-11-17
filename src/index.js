@@ -1,5 +1,6 @@
 import defaultClient from './vuex-crud/client';
 import createActions from './vuex-crud/createActions';
+import createJsonApiActions from './vuex-crud/createJsonApiActions';
 import createGetters from './vuex-crud/createGetters';
 import createMutations from './vuex-crud/createMutations';
 import createState from './vuex-crud/createState';
@@ -49,6 +50,7 @@ const createCrud = ({
   mutations = {},
   getters = {},
   client = defaultClient,
+  jsonApi = false,
   onFetchListStart = () => {},
   onFetchListSuccess = () => {},
   onFetchListError = () => {},
@@ -90,15 +92,25 @@ const createCrud = ({
 
     state: createState({ state, only }),
 
-    actions: createActions({
-      actions,
-      rootUrl,
-      only,
-      client,
-      parseList,
-      parseSingle,
-      parseError
-    }),
+    actions: jsonApi ?
+        createJsonApiActions({
+                actions,
+                resource,
+                only,
+                client,
+                parseList,
+                parseSingle,
+                parseError
+            }) :
+        createActions({
+              actions,
+              rootUrl,
+              only,
+              client,
+              parseList,
+              parseSingle,
+              parseError
+            }),
 
     mutations: createMutations({
       mutations,
